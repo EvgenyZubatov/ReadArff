@@ -294,11 +294,16 @@ public class ID3Chi extends Classifier {
 			}
 		} else {
 			// for attribute values get token distribution
-			for (int j = 0; j < m_Attribute.numValues(); j++) {
-				double [] dist = m_Successors[j].classifyInstanceWithToken(instance, token * m_Successors[j].m_Ratio);
-				for (int i = 0; i < numClasses; i++) {
-					tokenDistribution[i] += dist[i];			
-				}				
+			if (instance.isMissing(m_Attribute)) {
+				for (int j = 0; j < m_Attribute.numValues(); j++) {
+					double [] dist = m_Successors[j].classifyInstanceWithToken(instance, token * m_Successors[j].m_Ratio);
+					for (int i = 0; i < numClasses; i++) {
+						tokenDistribution[i] += dist[i];			
+					}				
+				}
+			} else {
+				int idx = (int)instance.value(m_Attribute);
+				tokenDistribution = m_Successors[idx].classifyInstanceWithToken(instance, token * m_Successors[idx].m_Ratio);				
 			}
 		}
 		
